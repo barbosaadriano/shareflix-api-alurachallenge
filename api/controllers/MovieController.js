@@ -11,6 +11,18 @@ class MovieController {
         }
     }
 
+    static async getOneMovie(req,res) {
+        const { id } = req.params
+        try {
+            const movie = await database.Movies.findOne({ where: {id : Number(id)}})
+            if (movie===null) 
+                return res.status(404).json({"message":`Não foi encontrado video com o id ${id}`})
+            return res.status(200).json(movie)
+        } catch (error) {
+            return res.status(500).json({"message":error.message})
+        }
+    }
+
 }
 
 module.exports = MovieController
