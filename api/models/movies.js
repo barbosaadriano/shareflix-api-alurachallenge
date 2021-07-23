@@ -9,9 +9,28 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Movies.init({
-    titulo: DataTypes.STRING,
-    descricao: DataTypes.TEXT,
-    url: DataTypes.STRING
+    titulo: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {msg: 'Por favor informar um título válido'},
+        len: [5,50]
+      }
+    },
+    descricao: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notNull: {msg: 'Por favor informar uma descrição válida'}        
+      }
+    } ,
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {msg: 'Por favor informar uma URL válida'}
+      }
+    } 
   }, {
     sequelize,
     modelName: 'Movies',
