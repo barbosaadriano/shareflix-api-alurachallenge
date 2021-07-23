@@ -23,6 +23,16 @@ class MovieController {
         }
     }
 
+    static async madeUpMovie(req,res) {
+        const newMovie = req.body
+        try {
+            const createdMovie = await database.Movies.create(newMovie)
+            return res.status(201).json(createdMovie)
+        } catch (error) {
+            return res.status(500).json({"message":error.message})
+        }
+    }
+
 }
 
 module.exports = MovieController
