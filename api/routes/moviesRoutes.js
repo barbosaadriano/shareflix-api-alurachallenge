@@ -7,5 +7,7 @@ router.get('/videos',MovieController.getAllMovies)
 router.get('/videos/:id',MovieController.getOneMovie)
 
 router.post('/videos',MovieController.madeUpMovie)
+router.put('/videos/:id',MovieController.updateMovie)
+
 
 module.exports = router

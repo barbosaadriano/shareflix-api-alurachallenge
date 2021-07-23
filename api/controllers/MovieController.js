@@ -33,6 +33,19 @@ class MovieController {
         }
     }
 
+    static async updateMovie(req,res)
+    {
+        const newData = req.body
+        const { id } = req.params
+        try {
+            await database.Movies.update(newData,{where: {id:Number(id)}})
+            const movieUpdated = await database.Movies.findOne({ where: {id: Number(id)}})
+            return res.status(200).json(movieUpdated)
+        } catch (error) {
+            return res.status(500).json({"message": error.message})
+        }
+    }
+
 }
 
 module.exports = MovieController
