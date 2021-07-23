@@ -9,5 +9,6 @@ router.get('/videos/:id',MovieController.getOneMovie)
 router.post('/videos',MovieController.madeUpMovie)
 router.put('/videos/:id',MovieController.updateMovie)
 
+router.delete('/videos/:id',MovieController.deleteMovie)
 
 module.exports = router

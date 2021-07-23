@@ -46,6 +46,18 @@ class MovieController {
         }
     }
 
+
+    static async deleteMovie(req,res)
+    {
+        const { id } = req.params
+        try {
+            await database.Movies.destroy({ where: {id: Number(id)}})
+            return res.status(200).json({"message":`O filme de id ${id} foi deletado`})
+        } catch (error) {
+            return res.status(500).json({"message": error.message})
+        }
+    }
+
 }
 
 module.exports = MovieController
