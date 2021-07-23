@@ -1,7 +1,8 @@
 const { Router } = require('express')
+const MovieController = require('../controllers/MovieController')
 
 const router = Router()
 
-router.get('/videos',(req,res)=>res.json({message:'ok falta implementar'}))
+router.get('/videos',MovieController.getAllMovies)
 
 module.exports = router
