@@ -1,0 +1,218 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "version": "1.0.0",
+        "description": "Projeto de API backend Alura Challenge",
+        "title":"shareflix-api-alurachallenge",
+        "contact": {
+            "name": "Adriano Barbosa",
+            "email": "b.adrianobarbosa@gmail.com"            
+        },
+        "license": "ISC"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/",
+            "description": "local server"
+        }
+    ],
+    "tags": [
+        {
+            "name": "CRUD operations"
+        }
+    ],
+    "paths": {
+        "/videos": {
+            "get": {
+                "tags": ["CRUD operations"],
+                "description": "Get all movies",
+                "operationId": "getAllMovies",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Movies were obtained",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Movies"
+                                }
+                            }
+                        }
+                    }                   
+                }
+            },
+            "post": {
+                "tags": ["CRUD operations"],
+                "description": "Create movies",
+                "operationId": "madeUpMovie",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Movie"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "New movie was created"
+                    }
+                }
+            }
+        },
+        "/videos/:id": {
+            "get":{
+                "tags": ["CRUD operations"],
+                "description": "Retrieve one Movie",
+                "operationId": "getOneMovie",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        },
+                        "required": true,
+                        "description": "Movie ID"
+                    }
+                ],                
+                "responses": {
+                    "200": {
+                        "description": "Retrieve one movie",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Movie"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["CRUD operations"],
+                "description": "Update movie",
+                "operationId": "updateMovie",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        },
+                        "required": true,
+                        "description": "Movie ID"
+                    }  
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Movie"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Movie updated",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Movie"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["CRUD operations"],
+                "description": "delete one movie",
+                "operationId": "deleteMovie",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        },
+                        "required": true,
+                        "description": "Movie ID"
+                    }  
+                ],                
+                "responses": {
+                    "200": {                        
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "id": {
+                "type": "integer",
+                "description": "Movie ID",
+                "example": 1000
+            },
+            "titulo": {
+                "type": "string",
+                "example": "Some awesome movie"
+            },
+            "descricao": {
+                "type": "string",
+                "example": "here goes the explanation about the movie"
+            },
+            "url": {
+                "type": "string",
+                "example": "https://myawesome.movie"
+            },
+            "Movie": {
+                "type": "object",
+                "properties": {
+                   "id": {
+                        "$ref": "#/components/schemas/id"
+                    },
+                    "titulo": {
+                        "$ref": "#/components/schemas/titulo"
+                    },
+                    "descricao": {
+                        "$ref": "#/components/schemas/descricao"
+                    },
+                    "url": {
+                        "$ref": "#/components/schemas/url"
+                    }
+                }
+            },
+            "Movies": {
+                "type": "object",
+                "properties": {
+                    "movies": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Movie"
+                        }
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                   "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
