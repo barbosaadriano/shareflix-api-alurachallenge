@@ -6,6 +6,7 @@ const app = express()
 const port = 3000
 
 routes(app)
-
-app.listen(port,()=>console.log(`Server is running at ${port}`))
+if (require.main === module) {
+    app.listen(port,()=>console.log(`Server is running at ${port}`))
+}
 module.exports = app
