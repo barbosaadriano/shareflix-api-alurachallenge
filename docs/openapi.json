@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "version": "1.0.0",
-        "description": "Projeto de API backend Alura Challenge",
+        "version": "1.0.1",
+        "description": "This is my version of API made up in #BackEndChallengeAlura.",
         "title":"shareflix-api-alurachallenge",
         "contact": {
             "name": "Adriano Barbosa",
@@ -19,15 +19,28 @@
     "tags": [
         {
             "name": "CRUD operations"
+        },
+        {
+            "name": "Movies"
+        },
+        {
+            "name": "Categories"
         }
     ],
     "paths": {
         "/videos": {
             "get": {
-                "tags": ["CRUD operations"],
+                "tags": ["Movies"],
                 "description": "Get all movies",
                 "operationId": "getAllMovies",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "in":"query",
+                        "name": "search",                    
+                        "required": false,
+                        "description": "Query string to find a movie by title or description"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Movies were obtained",
@@ -42,7 +55,7 @@
                 }
             },
             "post": {
-                "tags": ["CRUD operations"],
+                "tags": ["Movies"],
                 "description": "Create movies",
                 "operationId": "madeUpMovie",
                 "parameters": [],
@@ -65,7 +78,7 @@
         },
         "/videos/:id": {
             "get":{
-                "tags": ["CRUD operations"],
+                "tags": ["Movies"],
                 "description": "Retrieve one Movie",
                 "operationId": "getOneMovie",
                 "parameters": [
@@ -92,7 +105,7 @@
                 }
             },
             "put": {
-                "tags": ["CRUD operations"],
+                "tags": ["Movies"],
                 "description": "Update movie",
                 "operationId": "updateMovie",
                 "parameters": [
@@ -129,7 +142,7 @@
                 }
             },
             "delete": {
-                "tags": ["CRUD operations"],
+                "tags": ["Movies"],
                 "description": "delete one movie",
                 "operationId": "deleteMovie",
                 "parameters": [
@@ -156,6 +169,170 @@
                     }
                 }
             }
+        },
+        "/categorias":{
+            "get":{
+                "tags": ["Categories"],
+                "description": "Get all categories",
+                "operationId": "getAllCategories",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Categories are obtained",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Categories"
+                                }
+                            }
+                        }
+                    }                   
+                }
+            },
+            "post":{
+                "tags": ["Categories"],
+                "description": "Create Category",
+                "operationId": "madeUpCategory",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Category"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "New category was created"
+                    }
+                }
+            }
+        },
+        "/categorias/:id":{
+            "get":{
+                "tags": ["Categories"],
+                "description": "Retrieve one Category",
+                "operationId": "getOneCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        },
+                        "required": true,
+                        "description": "Category ID"
+                    }
+                ],                
+                "responses": {
+                    "200": {
+                        "description": "Retrieve one category",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Category"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Categories"],
+                "description": "Update category",
+                "operationId": "updateCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        },
+                        "required": true,
+                        "description": "Category ID"
+                    }  
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Category"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category updated",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Category"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Categories"],
+                "description": "delete one category",
+                "operationId": "deleteCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        },
+                        "required": true,
+                        "description": "category ID"
+                    }  
+                ],                
+                "responses": {
+                    "200": {                        
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categorias/:id/videos":{
+            "get":{
+                "tags": ["Categories"],
+                "description": "Get all movies from a category",
+                "operationId": "getMoviesFromCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        },
+                        "required": true,
+                        "description": "category ID"
+                    }  
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Movies were obtained",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Movies"
+                                }
+                            }
+                        }
+                    }                   
+                }
+            }
         }
     },
     "components": {
@@ -167,11 +344,15 @@
             },
             "titulo": {
                 "type": "string",
-                "example": "Some awesome movie"
+                "example": "Some title"
             },
             "descricao": {
                 "type": "string",
-                "example": "here goes the explanation about the movie"
+                "example": "here goes the explanation about the thing"
+            },
+            "cor": {
+                "type":"string",
+                "example": "an hexadecimal like #000000"
             },
             "url": {
                 "type": "string",
@@ -191,6 +372,24 @@
                     },
                     "url": {
                         "$ref": "#/components/schemas/url"
+                    },
+                    "category_id": {
+                        "$ref": "#/components/schemas/id",
+                        "description": "Category ID"
+                    }
+                }
+            },
+            "Category":{
+                "type":"object",
+                "properties":{
+                    "id": {
+                        "$ref": "#/components/schemas/id"
+                    },
+                    "titulo": {
+                        "$ref": "#/components/schemas/titulo"
+                    },
+                    "cor": {
+                        "$ref": "#/components/schemas/cor"
                     }
                 }
             },
@@ -201,6 +400,17 @@
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Movie"
+                        }
+                    }
+                }
+            },
+            "Categories": {
+                "type": "object",
+                "properties": {
+                    "movies": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Category"
                         }
                     }
                 }
