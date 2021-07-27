@@ -2,9 +2,11 @@ const database = require('../models')
 
 class CategoryController {
 
-    static async getAllCategories(req,res) {
+    static async getAllCategories(req,res) {            
+        const { _embed } = req.query
+        const include = _embed ? { include: _embed} : {}        
         try {
-            const allCategories = await database.Categories.findAll()
+            const allCategories = await database.Categories.findAll(include)
             return res.status(200).json(allCategories)
         } catch (error) {
             return res.status(500).json({"message":error.message})
