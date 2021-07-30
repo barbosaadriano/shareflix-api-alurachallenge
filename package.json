@@ -5,7 +5,10 @@
   "main": "/api/index.js",
   "scripts": {
     "start": "nodemon --inspect ./api/index.js",
-    "test": "node ./tests/index.test"
+    "test": "node ./tests/index.test",
+    "test:jest": "./node_modules/.bin/jest .",
+    "lint": "./node_modules/.bin/eslint .",
+    "lint:fix": "./node_modules/.bin/eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -23,6 +26,12 @@
   },
   "homepage": "https://github.com/barbosaadriano/shareflix-api-alurachallenge#readme",
   "devDependencies": {
+    "eslint": "^7.31.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "jest": "^27.0.6",
     "nodemon": "^2.0.12"
   },
   "dependencies": {

@@ -9,7 +9,7 @@ app.use(cors())
 routes(app)
 
 if (require.main === module) {
-    app.listen(port,()=>console.log(`Server is running at ${port}`))
+  app.listen(port, () => console.log(`Server is running at ${port}`))
 }
 
 module.exports = app
