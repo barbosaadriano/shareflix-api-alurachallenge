@@ -3,10 +3,10 @@ const database = require('../models')
 const Op = Sequelize.Op
 
 class MovieController {
-  static async getAllMovies (req, res) {
-    const { search } = req.query
-    const where = search
-      ? {
+  static async getMovies (req, res) {
+    const { search, rows } = req.query
+    let where = search
+      ? { where: {
           [Op.or]: [
             {
               titulo: {
@@ -19,11 +19,32 @@ class MovieController {
               }
             }
           ]
-        }
+         }
+       }
       : {}
+      let limit = 5
+      let offset = 0
+      let { page } = req.query
     try {
-      const allMovies = await database.Movies.findAll({ where })
-      return res.status(200).json(allMovies)
+      if (rows && Number(rows)>0)
+      {
+        limit = Number(rows)
+      }
+      const count = await database.Movies.count(where)
+      let pages = Math.ceil(count / limit)
+      page = page && Number(page)>0 && Number(page)<=pages ? Number(page) : 1
+      offset = limit * (page - 1)
+      where['limit'] = limit
+      where['offset'] = offset      
+      const movies = await database.Movies.findAll( where )
+      const retorno = {
+        "page": page,
+        "records": count,
+        "rows": movies.lenght,
+        "pages": pages,
+        "movies": movies        
+      }
+      return res.status(200).json(retorno)
     } catch (error) {
       return res.status(500).json({ message: error.message })
     }

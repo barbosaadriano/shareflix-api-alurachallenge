@@ -3,7 +3,7 @@ const CategoryController = require('../controllers/CategoryController')
 
 const router = Router()
 
-router.get('/categorias', CategoryController.getAllCategories)
+router.get('/categorias', CategoryController.getCategories)
 router.get('/categorias/:id', CategoryController.getOneCategory)
 router.get('/categorias/:id/videos', CategoryController.getMoviesFromCategory)
 
