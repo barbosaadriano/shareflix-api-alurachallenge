@@ -1,34 +1,33 @@
 const database = require('../models')
 
 class CategoryController {
-
-  static async getCategories(req,res) {
+  static async getCategories (req, res) {
     try {
       let limit = 5
       let offset = 0
-      const {_embed, rows } = req.query
+      const { _embed, rows } = req.query
       let { page } = req.query
-      let where = {}
+      const where = {}
       if (_embed) {
-        where['include'] = _embed
+        where.include = _embed
       }
-      if (rows && Number(rows)>0) {
+      if (rows && Number(rows) > 0) {
         limit = Number(rows)
       }
       const count = await database.Categories.count(where)
-      let pages = Math.ceil(count / limit)
-      page = page && Number(page)>0 && Number(page)<=pages ? Number(page) : 1
+      const pages = Math.ceil(count / limit)
+      page = page && Number(page) > 0 && Number(page) <= pages ? Number(page) : 1
 
       offset = limit * (page - 1)
-      where['limit'] = limit
-      where['offset'] = offset
+      where.limit = limit
+      where.offset = offset
       const categories = await database.Categories.findAll(where)
       const retorno = {
-        "page": page,
-        "records": count,
-        "rows": categories.lenght,
-        "pages": pages,
-        "categories": categories        
+        page: page,
+        records: count,
+        rows: categories.lenght,
+        pages: pages,
+        categories: categories
       }
       return res.status(200).json(retorno)
     } catch (error) {
