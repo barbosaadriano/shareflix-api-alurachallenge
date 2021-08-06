@@ -3,6 +3,15 @@ const database = require('../models')
 const Op = Sequelize.Op
 
 class MovieController {
+  static async getFreeMovies (req, res) {
+    try {
+      const movies = await database.Movies.scope('limited').findAll()
+      return res.status(200).json(movies)
+    } catch (error) {
+      return res.status(500).json({ message: error.message })
+    }
+  }
+
   static async getMovies (req, res) {
     const { search, rows } = req.query
     const where = search

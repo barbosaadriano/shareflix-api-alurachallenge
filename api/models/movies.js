@@ -35,7 +35,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'Movies'
+    modelName: 'Movies',
+    scopes: {
+      limited: {
+        limit: 3
+      }
+    }
   })
   return Movies
 }
