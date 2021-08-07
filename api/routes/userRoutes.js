@@ -8,9 +8,10 @@ router.post('/users/refresh-token', middlewaresAuth.refresh, UserController.logi
 router.post('/users', UserController.createUser)
 router.post('/users/login', middlewaresAuth.local, UserController.login)
 router.post('/users/logout', [middlewaresAuth.refresh, middlewaresAuth.bearer], UserController.logout)
-router.get('/users/:id', middlewaresAuth.bearer, UserController.getOneUser)
-router.put('/users/:id', middlewaresAuth.bearer, UserController.updateUser)
-router.delete('/users/:id', middlewaresAuth.bearer, UserController.deleteUser)
-router.get('/users', middlewaresAuth.bearer, UserController.getAllUser)
+router.get('/users/:id', [middlewaresAuth.bearer,middlewaresAuth.adminCheck], UserController.getOneUser)
+router.put('/users/:id', [middlewaresAuth.bearer,middlewaresAuth.adminCheck], UserController.updateUser)
+router.delete('/users/:id', [middlewaresAuth.bearer,middlewaresAuth.adminCheck], UserController.deleteUser)
+router.get('/users', [middlewaresAuth.bearer,middlewaresAuth.adminCheck], UserController.getAllUser)
+router.get('/users/email_verify/:token',UserController.verifyEmail)
 
 module.exports = router

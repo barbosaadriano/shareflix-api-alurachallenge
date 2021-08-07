@@ -1,20 +1,54 @@
 const nodemailer = require('nodemailer')
 
-async function sendEmail (user) {
-  const testAcount = await nodemailer.createTestAccount()
-  const trasnporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    auth: testAcount
-  })
-  const info = await trasnporter.sendMail({
-    from: 'noreplay@adrianob.com.br',
-    to: user.email,
-    subject: 'email test',
-    text: 'Hello, this is an test email',
-    html: '<h1>Hello</h1> <p>this is an test email</p>'
-  })
-
-  console.log('URL:' + nodemailer.getTestMessageUrl(info))
+const configEmailProduction = {
+  host: process.env.EMAIL_HOST,
+  auth: {
+    user: process.env.EMAIL_USUARIO,
+    pass: process.env.EMAIL_SENHA
+  },
+  secure: true,
+  port: process.env.EMAIL_PORT
 }
 
-module.exports = { sendEmail }
+const configEmailTest = (testAcount) => ({
+  host: 'smtp.ethereal.email',
+  auth: testAcount,
+})
+
+async function createConfiguration() {
+  if (process.env.NODE_ENV === 'production') {
+    return configEmailProduction
+  } else {
+    const testAcount = await nodemailer.createTestAccount()
+    return configEmailTest(testAcount)
+  }
+}
+
+class Email {
+
+  async sendEmail () {
+    
+    const configEmail = await createConfiguration()
+    const trasnporter = nodemailer.createTransport(configEmail)
+    const info = await trasnporter.sendMail(this)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('URL:' + nodemailer.getTestMessageUrl(info))
+    }
+  }
+
+}
+
+class EmailVerify extends Email {
+  constructor(user, target) {
+    super()
+    this.from = '"Shareflix API Challenge" <adriano@adrianob.com.br>'
+    this.to = user.email
+    this.subject = 'Shareflix email verification'
+    this.text = `Hello, you need to verify your e-mail here: ${target}`
+    this.html = `<h1>Hello</h1>, you need to verify your e-mail here: <a href="${target}">${target}</a>`
+  }
+}
+
+
+
+module.exports = { EmailVerify }

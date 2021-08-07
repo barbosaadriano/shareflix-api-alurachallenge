@@ -6,7 +6,7 @@ const crypto = require('crypto')
 const moment = require('moment')
 const blocklist = require('../../redis/blocklist-access-token')
 const allowlistRefreshToken = require('../../redis/allowlist-refresh-token')
-const emails = require('../services/emails')
+const {EmailVerify} = require('../services/emails')
 
 function createTokenJWT (user) {
   const payload = {
@@ -16,13 +16,22 @@ function createTokenJWT (user) {
   return token
 }
 
+function checkTokenVerify(token) {
+   const payload = jwt.verify(token, process.env.JWT_PASSWD)
+   return payload.id 
+}
+
+
 async function createOpaqueToken (user) {
   const opaqueToken = crypto.randomBytes(25).toString('hex')
   const expireDate = moment().add(24, 'h').unix()
   await allowlistRefreshToken.add(opaqueToken, user.id, expireDate)
   return opaqueToken
 }
-
+function generateTarget(route,id) {
+  const baseUrl = process.env.BASE_URL
+  return `${baseUrl}${route}${id}` 
+}
 class UserController {
   static async createUser (req, res) {
     const newUser = req.body
@@ -32,7 +41,10 @@ class UserController {
         throw new Error('Email já cadastrado!')
       }
       const createdUser = await database.User.create(newUser)
-      emails.sendEmail(createdUser).catch(console.log)
+      const verifyToken = createTokenJWT(createdUser)
+      const target = generateTarget("users/email_verify/",verifyToken)
+      const emailVerify = new EmailVerify(createdUser,target)
+      emailVerify.sendEmail().catch(console.log)      
       return res.status(201).json(createdUser)
     } catch (error) {
       return res.status(500).json({ message: error.message })
@@ -134,6 +146,18 @@ class UserController {
       const token = req.token
       await blocklist.addToken(token)
       res.status(204).send()
+    } catch (error) {
+      return res.status(400).json({ message: error.message })
+    }
+  }
+
+  static async verifyEmail(req,res) {
+    try {
+      const { token } = req.params
+      const id = checkTokenVerify(token)
+      const user = await database.User.findByPk(Number(id))
+      await user.verifyEmail()
+      res.status(201).send()
     } catch (error) {
       return res.status(400).json({ message: error.message })
     }

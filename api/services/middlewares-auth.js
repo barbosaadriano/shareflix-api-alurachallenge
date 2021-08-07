@@ -26,6 +26,9 @@ module.exports = {
       if (!user) {
         return res.status(401).json()
       }
+      if (!user.verified) {
+        return res.status(400).json({ error: 'User not verified'})
+      } 
       req.user = user
       return next()
     })(req, res, next)
@@ -59,6 +62,20 @@ module.exports = {
       const id = await checkRefreshToken(refreshToken)
       await invalidateRefreshToken(refreshToken)
       req.user = await User.findByPk(id)
+      return next()
+    } catch (error) {
+      if (error.name === 'InvalidArgumentError') {
+        return res.status(401).json({ error: error.message })
+      }
+      return res.status(500).json({ error: error.message })
+    }
+  },
+  adminCheck: async (req,res,next) => {
+    try {
+      const user = req.user
+      if (user.role !== 'admin') {
+        throw new Error('User is not admin')
+      }
       return next()
     } catch (error) {
       if (error.name === 'InvalidArgumentError') {

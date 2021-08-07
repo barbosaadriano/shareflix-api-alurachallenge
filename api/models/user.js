@@ -13,6 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       const hashCost = Number(process.env.HASH_COST)
       return bcrypt.hashSync(password, hashCost)
     }
+
+    async verifyEmail()
+    {
+      this.verified = true
+      await this.save()
+    }
   };
   User.init({
     name: {
@@ -43,6 +49,16 @@ module.exports = (sequelize, DataTypes) => {
       async set (value) {
         this.setDataValue('hashPwd', User.generateHashPassword(value))
       }
+    },
+    verified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: 0
+    },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'user'
     }
   }, {
     sequelize,
@@ -52,6 +68,7 @@ module.exports = (sequelize, DataTypes) => {
     const values = Object.assign({}, this.get())
     delete values.senha
     delete values.hashPwd
+    delete values.verified
     return values
   }
   return User
