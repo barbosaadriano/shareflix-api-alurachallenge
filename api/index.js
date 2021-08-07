@@ -3,6 +3,9 @@ const routes = require('./routes')
 const cors = require('cors')
 require('./config/config')
 require('./services/authentication-services')
+require('../redis/blocklist-access-token')
+require('../redis/allowlist-refresh-token')
+
 const app = express()
 const port = process.env.API_PORT
 

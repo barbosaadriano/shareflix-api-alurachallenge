@@ -8,9 +8,18 @@ const jwt = require('jsonwebtoken')
 
 const { User } = require('../models')
 
+const blocklist = require('../../redis/blocklist-access-token')
+
 function checkUser (user) {
   if (!user) {
     throw new errors.InvalidArgumentError('User not found!')
+  }
+}
+
+async function  checkTokenBlocklisted(token) {
+  const tokenBlocked = await blocklist.hasToken(token)
+  if (tokenBlocked) {
+    throw new jwt.JsonWebTokenError('Invalid token by logout')
   }
 }
 
@@ -42,9 +51,10 @@ passport.use(
   new BearerStrategy(
     async (token, done) => {
       try {
+        await checkTokenBlocklisted(token)
         const payload = jwt.verify(token, process.env.JWT_PASSWD)
         const user = await User.findByPk(payload.id)
-        done(null, user)
+        done(null, user, { token: token })
       } catch (error) {
         done(error)
       }
