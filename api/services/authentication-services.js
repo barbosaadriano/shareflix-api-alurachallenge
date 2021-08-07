@@ -16,7 +16,7 @@ function checkUser (user) {
   }
 }
 
-async function  checkTokenBlocklisted(token) {
+async function checkTokenBlocklisted (token) {
   const tokenBlocked = await blocklist.hasToken(token)
   if (tokenBlocked) {
     throw new jwt.JsonWebTokenError('Invalid token by logout')

@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
       validate: {
-        isEmail:true
+        isEmail: true
       }
     },
     hashPwd: {
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     senha: {
-      type: DataTypes.VIRTUAL,      
+      type: DataTypes.VIRTUAL,
       get () {
         return this.hashPwd
       },

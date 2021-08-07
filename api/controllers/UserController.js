@@ -16,10 +16,10 @@ function createTokenJWT (user) {
   return token
 }
 
-async function createOpaqueToken(user) {
+async function createOpaqueToken (user) {
   const opaqueToken = crypto.randomBytes(25).toString('hex')
-  const expireDate = moment().add(24,'h').unix()
-  await allowlistRefreshToken.add(opaqueToken,user.id,expireDate)
+  const expireDate = moment().add(24, 'h').unix()
+  await allowlistRefreshToken.add(opaqueToken, user.id, expireDate)
   return opaqueToken
 }
 
@@ -27,7 +27,7 @@ class UserController {
   static async createUser (req, res) {
     const newUser = req.body
     try {
-      const user = await database.User.findOne({ where: { email: newUser.email }})
+      const user = await database.User.findOne({ where: { email: newUser.email } })
       if (user) {
         throw new Error('Email já cadastrado!')
       }
@@ -39,12 +39,12 @@ class UserController {
     }
   }
 
-  static async getOneUser(req,res) {
+  static async getOneUser (req, res) {
     const { id } = req.params
     try {
       const user = await database.User.findByPk(Number(id))
-      if (user === null) { 
-        return res.status(404).json({ message: `Não foi encontrado usuário com o id ${id}` }) 
+      if (user === null) {
+        return res.status(404).json({ message: `Não foi encontrado usuário com o id ${id}` })
       }
       return res.status(200).json(user)
     } catch (error) {
@@ -52,7 +52,7 @@ class UserController {
     }
   }
 
-  static async updateUser(req,res) {
+  static async updateUser (req, res) {
     const newData = req.body
     const { id } = req.params
     try {
@@ -64,7 +64,7 @@ class UserController {
     }
   }
 
-  static async deleteUser(req,res) {
+  static async deleteUser (req, res) {
     const { id } = req.params
     try {
       await database.User.destroy({ where: { id: Number(id) } })
@@ -74,7 +74,7 @@ class UserController {
     }
   }
 
-  static async getAllUser(req,res) {
+  static async getAllUser (req, res) {
     const { search, rows } = req.query
     const where = search
       ? {
@@ -126,17 +126,17 @@ class UserController {
     const refreshToken = await createOpaqueToken(req.user)
 
     res.set('Authorization', accessToken)
-    res.status(200).json({refreshToken})
+    res.status(200).json({ refreshToken })
   }
 
-  static async logout (req,res) {
+  static async logout (req, res) {
     try {
       const token = req.token
       await blocklist.addToken(token)
-      res.status(204).send()  
+      res.status(204).send()
     } catch (error) {
       return res.status(400).json({ message: error.message })
-    }  
+    }
   }
 }
 

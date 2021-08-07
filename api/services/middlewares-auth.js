@@ -3,7 +3,7 @@ const { User } = require('../models')
 const { InvalidArgumentError } = require('../errors/errors')
 const allowListRefreshToken = require('../../redis/allowlist-refresh-token')
 
-async function checkRefreshToken(refereshToken) {
+async function checkRefreshToken (refereshToken) {
   if (!refereshToken) {
     throw new InvalidArgumentError('Refresh token não enviado!')
   }
@@ -13,7 +13,7 @@ async function checkRefreshToken(refereshToken) {
   }
   return id
 }
-async function invalidateRefreshToken(refereshToken) {
+async function invalidateRefreshToken (refereshToken) {
   await allowListRefreshToken.delete(refereshToken)
 }
 
@@ -55,17 +55,16 @@ module.exports = {
   },
   refresh: async (req, res, next) => {
     try {
-      const { refreshToken } = req.body 
+      const { refreshToken } = req.body
       const id = await checkRefreshToken(refreshToken)
       await invalidateRefreshToken(refreshToken)
       req.user = await User.findByPk(id)
-      return next()  
+      return next()
     } catch (error) {
       if (error.name === 'InvalidArgumentError') {
-        return res.status(401).json({ error: error.message})
+        return res.status(401).json({ error: error.message })
       }
-      return res.status(500).json({error: error.message})
+      return res.status(500).json({ error: error.message })
     }
-    
   }
 }
