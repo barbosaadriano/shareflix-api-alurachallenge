@@ -14,8 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       return bcrypt.hashSync(password, hashCost)
     }
 
-    async verifyEmail()
-    {
+    async verifyEmail () {
       this.verified = true
       await this.save()
     }

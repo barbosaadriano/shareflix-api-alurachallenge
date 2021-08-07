@@ -6,7 +6,7 @@ const crypto = require('crypto')
 const moment = require('moment')
 const blocklist = require('../../redis/blocklist-access-token')
 const allowlistRefreshToken = require('../../redis/allowlist-refresh-token')
-const {EmailVerify} = require('../services/emails')
+const { EmailVerify } = require('../services/emails')
 
 function createTokenJWT (user) {
   const payload = {
@@ -16,11 +16,10 @@ function createTokenJWT (user) {
   return token
 }
 
-function checkTokenVerify(token) {
-   const payload = jwt.verify(token, process.env.JWT_PASSWD)
-   return payload.id 
+function checkTokenVerify (token) {
+  const payload = jwt.verify(token, process.env.JWT_PASSWD)
+  return payload.id
 }
-
 
 async function createOpaqueToken (user) {
   const opaqueToken = crypto.randomBytes(25).toString('hex')
@@ -28,9 +27,9 @@ async function createOpaqueToken (user) {
   await allowlistRefreshToken.add(opaqueToken, user.id, expireDate)
   return opaqueToken
 }
-function generateTarget(route,id) {
+function generateTarget (route, id) {
   const baseUrl = process.env.BASE_URL
-  return `${baseUrl}${route}${id}` 
+  return `${baseUrl}${route}${id}`
 }
 class UserController {
   static async createUser (req, res) {
@@ -42,9 +41,9 @@ class UserController {
       }
       const createdUser = await database.User.create(newUser)
       const verifyToken = createTokenJWT(createdUser)
-      const target = generateTarget("users/email_verify/",verifyToken)
-      const emailVerify = new EmailVerify(createdUser,target)
-      emailVerify.sendEmail().catch(console.log)      
+      const target = generateTarget('users/email_verify/', verifyToken)
+      const emailVerify = new EmailVerify(createdUser, target)
+      emailVerify.sendEmail().catch(console.log)
       return res.status(201).json(createdUser)
     } catch (error) {
       return res.status(500).json({ message: error.message })
@@ -151,7 +150,7 @@ class UserController {
     }
   }
 
-  static async verifyEmail(req,res) {
+  static async verifyEmail (req, res) {
     try {
       const { token } = req.params
       const id = checkTokenVerify(token)

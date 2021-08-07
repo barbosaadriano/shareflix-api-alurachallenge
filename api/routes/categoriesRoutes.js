@@ -8,9 +8,9 @@ router.get('/categorias', middlewaresAuth.bearer, CategoryController.getCategori
 router.get('/categorias/:id', middlewaresAuth.bearer, CategoryController.getOneCategory)
 router.get('/categorias/:id/videos', middlewaresAuth.bearer, CategoryController.getMoviesFromCategory)
 
-router.post('/categorias', [middlewaresAuth.bearer,middlewaresAuth.adminCheck], CategoryController.madeUpCategory)
-router.put('/categorias/:id', [middlewaresAuth.bearer,middlewaresAuth.adminCheck], CategoryController.updateCategory)
+router.post('/categorias', [middlewaresAuth.bearer, middlewaresAuth.adminCheck], CategoryController.madeUpCategory)
+router.put('/categorias/:id', [middlewaresAuth.bearer, middlewaresAuth.adminCheck], CategoryController.updateCategory)
 
-router.delete('/categorias/:id', [middlewaresAuth.bearer,middlewaresAuth.adminCheck], CategoryController.deleteCategory)
+router.delete('/categorias/:id', [middlewaresAuth.bearer, middlewaresAuth.adminCheck], CategoryController.deleteCategory)
 
 module.exports = router

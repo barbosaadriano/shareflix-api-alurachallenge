@@ -12,10 +12,10 @@ const configEmailProduction = {
 
 const configEmailTest = (testAcount) => ({
   host: 'smtp.ethereal.email',
-  auth: testAcount,
+  auth: testAcount
 })
 
-async function createConfiguration() {
+async function createConfiguration () {
   if (process.env.NODE_ENV === 'production') {
     return configEmailProduction
   } else {
@@ -25,9 +25,7 @@ async function createConfiguration() {
 }
 
 class Email {
-
   async sendEmail () {
-    
     const configEmail = await createConfiguration()
     const trasnporter = nodemailer.createTransport(configEmail)
     const info = await trasnporter.sendMail(this)
@@ -35,11 +33,10 @@ class Email {
       console.log('URL:' + nodemailer.getTestMessageUrl(info))
     }
   }
-
 }
 
 class EmailVerify extends Email {
-  constructor(user, target) {
+  constructor (user, target) {
     super()
     this.from = '"Shareflix API Challenge" <adriano@adrianob.com.br>'
     this.to = user.email
@@ -48,7 +45,5 @@ class EmailVerify extends Email {
     this.html = `<h1>Hello</h1>, you need to verify your e-mail here: <a href="${target}">${target}</a>`
   }
 }
-
-
 
 module.exports = { EmailVerify }

@@ -27,8 +27,8 @@ module.exports = {
         return res.status(401).json()
       }
       if (!user.verified) {
-        return res.status(400).json({ error: 'User not verified'})
-      } 
+        return res.status(400).json({ error: 'User not verified' })
+      }
       req.user = user
       return next()
     })(req, res, next)
@@ -70,7 +70,7 @@ module.exports = {
       return res.status(500).json({ error: error.message })
     }
   },
-  adminCheck: async (req,res,next) => {
+  adminCheck: async (req, res, next) => {
     try {
       const user = req.user
       if (user.role !== 'admin') {
